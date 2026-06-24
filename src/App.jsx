@@ -4,6 +4,7 @@ import { parseFile } from "./utils/parseFile";
 import { buildGraph } from "./utils/buildGraph";
 import { findBestPath } from "./utils/findLongestPath";
 import { buildResultString } from "./utils/buildResultString";
+import { PuzzleBoard } from "./components/PuzzleBoard";
 import './App.css'
 
 function App() {
@@ -38,28 +39,41 @@ const [bestPath, setBestPath] = useState([]);
 
 
   return (
-    <>
-      <UploadFile onFileLoad={handleFileLoad} />
+  <main className="container">
+    <header className="app-header">
+      <h1 className="app-title">Digital Puzzle Solver</h1>
+      <p className="app-subtitle">
+        Upload a file with numeric fragments and find the longest valid sequence.
+      </p>
+    </header>
 
-<button onClick={handleFindSequence}>
-  Find sequence
-</button>
+    <section className="panel">
+      <div className="upload-row">
+        <UploadFile onFileLoad={handleFileLoad} />
+      </div>
 
-<p>Fragments loaded: {fragments.length}</p>
+      <button onClick={handleFindSequence}>Find sequence</button>
 
-{error && <p>{error}</p>}
+      <p className="stats">Fragments loaded: {fragments.length}</p>
+      {error && <p className="error">{error}</p>}
+    </section>
 
-{bestPath.length > 0 && (
-  <div>
-    <h2>Best path</h2>
-    <p>{bestPath.join(" → ")}</p>
+    {bestPath.length > 0 && (
+        <section className="panel">
+          <h2 className="section-title">Result</h2>
+          <p className="result-box">{buildResultString(bestPath)}</p>
+           <p className="stats">Fragments in path: {bestPath.length}</p>
+        <h2 className="section-title">Best path</h2>
 
-    <h2>Result</h2>
-    <p>{buildResultString(bestPath)}</p>
-  </div>
-      )}
-      </>
-  )
+        <PuzzleBoard fragments={bestPath} />
+
+       
+
+        
+      </section>
+    )}
+  </main>
+);
 }
 
 export default App
