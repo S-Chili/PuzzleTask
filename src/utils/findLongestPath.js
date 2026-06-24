@@ -1,14 +1,21 @@
-export function findLongestPath(node, graph) {
-  const children = graph.get(node);
+export function findLongestPath(node, graph, visited = new Set()) {
+  const currentVisited = new Set(visited);
+  currentVisited.add(node);
 
-  if (children.length === 0) {
+  const children = graph.get(node) || [];
+  const availableChildren = children.filter(
+    (child) => !currentVisited.has(child),
+  );
+
+  if (availableChildren.length === 0) {
     return [node];
   }
 
   let longestPath = [];
 
-  children.forEach((child) => {
-    const currentPath = findLongestPath(child, graph);
+  availableChildren.forEach((child) => {
+    const currentPath = findLongestPath(child, graph, currentVisited);
+
     if (currentPath.length > longestPath.length) {
       longestPath = currentPath;
     }

@@ -1,139 +1,64 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import { buildGraph } from './utils/buildGraph'
-//import { findLongestPath } from "./utils/findLongestPath";
+import { UploadFile } from "./components/UploadFile";
+import { parseFile } from "./utils/parseFile";
+import { buildGraph } from "./utils/buildGraph";
 import { findBestPath } from "./utils/findLongestPath";
+import { buildResultString } from "./utils/buildResultString";
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [fragments, setFragments] = useState([]);
+const [bestPath, setBestPath] = useState([]);
+  const [error, setError] = useState("");
+  
+  const handleFileLoad = (text) => {
+  const parsedLines = parseFile(text);
 
+  setFragments(parsedLines);
+  setBestPath([]);
+  setError("");
+  };
+  
+  const handleFindSequence = () => {
+  if (fragments.length === 0) {
+    setError("Please upload a file first.");
+    return;
+  }
 
-    const testFragments = [
-    "608017",
-    "248460",
-    "962282",
-    "994725",
-    "177092",
-  ];
+  setError("Calculating...");
 
-  const graph = buildGraph(testFragments);
-  const bestPath = findBestPath(graph);
+  setTimeout(() => {
+    const graph = buildGraph(fragments);
+    const path = findBestPath(graph);
 
-  console.log(graph);
-  console.log(bestPath);
+    setBestPath(path);
+    setError("");
+  }, 0);
+};
+
 
   return (
     <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+      <UploadFile onFileLoad={handleFileLoad} />
 
-      <div className="ticks"></div>
+<button onClick={handleFindSequence}>
+  Find sequence
+</button>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+<p>Fragments loaded: {fragments.length}</p>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+{error && <p>{error}</p>}
+
+{bestPath.length > 0 && (
+  <div>
+    <h2>Best path</h2>
+    <p>{bestPath.join(" → ")}</p>
+
+    <h2>Result</h2>
+    <p>{buildResultString(bestPath)}</p>
+  </div>
+      )}
+      </>
   )
 }
 
