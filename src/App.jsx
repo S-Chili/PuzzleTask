@@ -3,14 +3,27 @@ import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
 import { buildGraph } from './utils/buildGraph'
+//import { findLongestPath } from "./utils/findLongestPath";
+import { findBestPath } from "./utils/findLongestPath";
 import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
 
-  const testFragments = ["248460", "608017", "177092"];
 
-  console.log(buildGraph(testFragments));
+    const testFragments = [
+    "608017",
+    "248460",
+    "962282",
+    "994725",
+    "177092",
+  ];
+
+  const graph = buildGraph(testFragments);
+  const bestPath = findBestPath(graph);
+
+  console.log(graph);
+  console.log(bestPath);
 
   return (
     <>
