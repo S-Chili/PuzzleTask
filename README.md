@@ -4,6 +4,10 @@ Digital Puzzle Solver is a React application that solves a digital puzzle by fin
 
 The application allows users to upload a `.txt` file containing six-digit fragments, automatically builds connections between them, and generates the longest possible sequence where each fragment is used only once.
 
+## 🚀 Live Demo
+
+👉 [Click here to try the app](https://s-chili.github.io/PuzzleTask/)
+
 ## Features
 
 * Upload `.txt` files with puzzle fragments
